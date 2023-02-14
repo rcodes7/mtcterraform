@@ -31,8 +31,9 @@ resource "docker_container" "nodered_container" {
 #- terraform show | grep ....
 
 output "IP-Address" {
-  value = docker_container.nodered_container.network_data[0].ip_address
-  description = "The ip addressd of the container."
+  value = join(":", [docker_container.nodered_container.network_data[0].ip_address,
+    docker_container.nodered_container.ports[0].external])
+  description = "The ip address and external port of the container."
 }
 
 output "container-name" {
