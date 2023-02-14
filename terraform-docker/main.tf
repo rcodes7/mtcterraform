@@ -15,33 +15,21 @@ resource "docker_image" "nodered_image" {
   name = "nodered/node-red:latest"
 }
 
+#https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
 resource "random_string" "random" {
-  length = 4
-  special = false
-  upper = false
-}
-
-resource "random_string" "random2" {
+  count = 2
   length = 4
   special = false
   upper = false
 }
 
 resource "docker_container" "nodered_container" {
-  name = join("-", ["nodered", random_string.random.result])
+  count = 2 #https://developer.hashicorp.com/terraform/language/meta-arguments/count
+  name = join("-", ["nodered", random_string.random[count.index].result])
   image = docker_image.nodered_image.image_id
   ports {
     internal = 1880
 #    external = 1880
-  }
-}
-
-resource "docker_container" "nodered_container2" {
-  name = join("-", ["nodered2", random_string.random2.result])
-  image = docker_image.nodered_image.image_id
-  ports {
-    internal = 1880
-    #    external = 1880
   }
 }
 
@@ -51,13 +39,19 @@ resource "docker_container" "nodered_container2" {
 #- terraform console > provide path of attribute youd like to see
 #- terraform show | grep ....
 
-output "IP-Address" {
-  value = join(":", [docker_container.nodered_container.network_data[0].ip_address,
-    docker_container.nodered_container.ports[0].external])
+output "IP-Address-0" {
+  value = join(":", [docker_container.nodered_container[0].network_data[0].ip_address,
+    docker_container.nodered_container[0].ports[0].external])
+  description = "The ip address and external port of the container."
+}
+
+output "IP-Address-1" {
+  value = join(":", [docker_container.nodered_container[1].network_data[0].ip_address,
+    docker_container.nodered_container[1].ports[0].external])
   description = "The ip address and external port of the container."
 }
 
 output "container-names" {
-  value = [docker_container.nodered_container.name, docker_container.nodered_container2.name]
+  value = [docker_container.nodered_container[0].name, docker_container.nodered_container[1].name]
   description = "The name of the container."
 }
