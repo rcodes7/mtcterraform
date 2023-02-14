@@ -39,15 +39,9 @@ resource "docker_container" "nodered_container" {
 #- terraform console > provide path of attribute youd like to see
 #- terraform show | grep ....
 
-output "IP-Address-0" {
-  value = join(":", [docker_container.nodered_container[0].network_data[0].ip_address,
-    docker_container.nodered_container[0].ports[0].external])
-  description = "The ip address and external port of the container."
-}
-
-output "IP-Address-1" {
-  value = join(":", [docker_container.nodered_container[1].network_data[0].ip_address,
-    docker_container.nodered_container[1].ports[0].external])
+output "ip-address" {
+#  use for expression https://developer.hashicorp.com/terraform/language/expressions/for
+  value = [for container in docker_container.nodered_container[*] : join(":", container.network_data[*].ip_address, container.ports[*].external)]
   description = "The ip address and external port of the container."
 }
 
