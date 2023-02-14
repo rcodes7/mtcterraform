@@ -52,6 +52,7 @@ output "IP-Address-1" {
 }
 
 output "container-names" {
-  value = [docker_container.nodered_container[0].name, docker_container.nodered_container[1].name]
+  # splat expressions https://developer.hashicorp.com/terraform/language/expressions/splat
+  value = docker_container.nodered_container[*].name
   description = "The name of the container."
 }
