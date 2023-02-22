@@ -11,30 +11,7 @@ terraform {
 // leave empty since it is a local provider
 provider "docker" {}
 
-variable "ext_port" {
-  type = number
-  default = 1880
 
-  validation {
-    condition = var.ext_port <= 65535 && var.ext_port > 0
-    error_message = "The external port must be in the valid port range 0 - 65535."
-  }
-}
-
-variable "int_port" {
-  type = number
-  default = 1880
-
-  validation {
-    condition = var.int_port == 1880
-    error_message = "The internal port must be 1880."
-  }
-}
-
-variable "container_count" {
-  type = number
-  default = 1
-}
 
 resource "docker_image" "nodered_image" {
   name = "nodered/node-red:latest"
@@ -56,22 +33,4 @@ resource "docker_container" "nodered_container" {
     internal = var.int_port
     external = var.ext_port
   }
-}
-
-
-#View them with (name must not contain spaces):
-#- terraform output
-#- terraform console > provide path of attribute youd like to see
-#- terraform show | grep ....
-
-output "ip-address" {
-#  use for expression https://developer.hashicorp.com/terraform/language/expressions/for
-  value = [for container in docker_container.nodered_container[*] : join(":", container.network_data[*].ip_address, container.ports[*].external)]
-  description = "The ip address and external port of the container."
-}
-
-output "container-names" {
-  # splat expressions https://developer.hashicorp.com/terraform/language/expressions/splat
-  value = docker_container.nodered_container[*].name
-  description = "The name of the container."
 }
