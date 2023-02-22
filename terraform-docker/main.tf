@@ -17,14 +17,14 @@ resource "docker_image" "nodered_image" {
 
 #https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
 resource "random_string" "random" {
-  count = 2
+  count = 1
   length = 4
   special = false
   upper = false
 }
 
 resource "docker_container" "nodered_container" {
-  count = 2 #https://developer.hashicorp.com/terraform/language/meta-arguments/count
+  count = 1 #https://developer.hashicorp.com/terraform/language/meta-arguments/count
   name = join("-", ["nodered", random_string.random[count.index].result])
   image = docker_image.nodered_image.image_id
   ports {
