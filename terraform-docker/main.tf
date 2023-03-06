@@ -39,7 +39,7 @@ resource "docker_container" "nodered_container" {
   image = docker_image.nodered_image.image_id
   ports {
     internal = var.int_port
-    external = var.ext_port[count.index]
+    external = lookup(var.ext_port, var.env)[count.index]
   }
   volumes {
     container_path = "/data"
