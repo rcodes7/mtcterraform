@@ -5,11 +5,19 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "3.0.1"
     }
+    null = {
+      source = "hashicorp/null"
+      version = "3.2.1"
+    }
   }
 }
 
 // leave empty since it is a local provider
 provider "docker" {}
+
+provider "null" {
+  # Configuration options
+}
 
 
 
@@ -33,4 +41,14 @@ resource "docker_container" "nodered_container" {
     internal = var.int_port
     external = var.ext_port
   }
+  volumes {
+    container_path = "/data"
+    host_path = "/Users/raul/Developer/udemy/mtcterraform/terraform-docker/noderedvol"
+  }
 }
+
+# resource "null_resource" "dockervol" {
+#   provisioner "local-exec" {
+#     command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
+#   }
+# }
