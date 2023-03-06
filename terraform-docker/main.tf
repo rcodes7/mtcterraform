@@ -22,7 +22,7 @@ provider "null" {
 
 
 resource "docker_image" "nodered_image" {
-  name = "nodered/node-red:latest"
+  name = lookup(var.image, var.env)
 }
 
 #https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
