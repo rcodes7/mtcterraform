@@ -17,3 +17,7 @@ variable "ext_port_in" {
 variable "image_in" {
   
 }
+
+variable "count_in" {
+  
+}
