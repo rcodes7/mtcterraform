@@ -30,3 +30,5 @@ override.tf.json
 /.idea/sonarlint/
 
 terraform-docker/noderedvol/*
+
+.DS_STORE
