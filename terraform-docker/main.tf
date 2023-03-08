@@ -19,6 +19,9 @@ resource "random_string" "random" {
 }
 
 resource "docker_container" "nodered_container" {
+  depends_on = [
+    null_resource.dockervol
+  ]
   count = local.container_count #https://developer.hashicorp.com/terraform/language/meta-arguments/count
   name = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
   image = module.image.image_out
@@ -32,8 +35,9 @@ resource "docker_container" "nodered_container" {
   }
 }
 
-# resource "null_resource" "dockervol" {
-#   provisioner "local-exec" {
-#     command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
-#   }
-# }
+resource "null_resource" "dockervol" {
+  provisioner "local-exec" {
+    # command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
+    command = "mkdir noderedvol/ || true"
+  }
+}
