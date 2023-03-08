@@ -14,10 +14,6 @@ variable "ext_port_in" {
   
 }
 
-variable "host_path_in" {
-  
-}
-
 variable "image_in" {
   
 }
