@@ -32,3 +32,5 @@ override.tf.json
 terraform-docker/noderedvol/*
 
 .DS_STORE
+
+backup
